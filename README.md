@@ -1,2 +1,2 @@
-# Life-QualifyForSanMarino
+# LifeF1 - Qualify For San Marino
 This game is inspired by the hilarious ineptitude of the Life Racing Engines team’s short F1 career. In this game you will attempt to qualify for San Marino in the hot garbage L190. The user begins that game at the the starting line and attempts to qualify for the San Marino Grand Prix. You must make it to the end by the time the clock expires. Watch out though - obstacles such as faster F1 cars might hit you from behind!  The game is built using HTML, CSS and Vanilla JS
