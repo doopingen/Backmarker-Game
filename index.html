@@ -4,16 +4,24 @@
     <meta charset="utf-8" />
     <title>Life F1 Racing Game</title>
     <style>
+        @font-face {
+            font-family: 'Game_over';
+            src: url('game_over.ttf');
+        }
     	* { padding: 0; margin: 0; }
         canvas { display: block; margin: 0 auto; }
         body { background-color: #000000; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
     </style>
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
 </head>
 <body>
 
-<canvas id="myCanvas" width="750" height="450"></canvas>
+<canvas id="myCanvas" width="450" height="450"></canvas>
 
-<script src="life.js"></script>
+<script src="js/life.js"></script>
 
 </body>
 </html>
