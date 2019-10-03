@@ -1,6 +1,7 @@
 var delay = 4000;
 var cpu = new Image(130, 70);
 var bb1 = new Image(100, 50);
+var titleBox = new Image(450, 450);
 var temp = 0;
 
 // var billboard = [{
@@ -25,6 +26,7 @@ var track = [{
     cpy: 480,
     x: 200,
 }];
+
 var LF1 = {
     canvas: null,
     ctx: null,
@@ -52,6 +54,7 @@ var LF1 = {
     },
     state: {
         trigger: false,
+        gameStart: false,
         gameOver: false,
         gameSecTimer: 0,
         score: 1,
@@ -78,10 +81,11 @@ var LF1 = {
             spaceOnRight: 0,
       },
       keypress: {
-        up: false,
-        left: false,
-        right: false,
-        down: false
+          space: false,
+          up: false,
+          left: false,
+          right: false,
+          down: false
       },
     },
     storage: {
@@ -97,15 +101,21 @@ LF1.canvas2.height = LF1.canvas.height;
 LF1.ctx2 = LF1.canvas2.getContext('2d');
 window.addEventListener("keydown", keyDown, false);
 window.addEventListener("keyup", keyUp, false);
+// startGame();
 
-function titleScreen() {
+// function startGame() {
+//     
+//     titleBox.onload = function() {
+        
+ 
+//     }
+//     
+// }
 
-}
 
-function startGame() {
     drawBg();
     gameLoop();
-}
+
 
 // if(LF1.state.straight === false){
 //     for(i = 0; i < 3; i++) {
@@ -169,6 +179,8 @@ function drawCPU(image, y, width, height) {
 function gameLoop(){
     calcMovement();
     
+  
+    
     // if(LF1.state.speed > 0) {
       // Moves the background left or right depending on keypress
        LF1.state.bgpos += (LF1.state.currentCurve * 0.04) * (LF1.state.speed * 0.2);
@@ -188,10 +200,23 @@ function gameLoop(){
        
        LF1.state.startDark = !LF1.state.startDark;
      }
+
      //Draws background 
-     drawPseudo(LF1.ctx, LF1.state.offset, LF1.colors.ground, LF1.colors.groundDark, LF1.canvas.width);
-     drawStraightL();
-     drawStraightR();
+     if (!LF1.state.keypress.space){
+        LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
+        titleBox.src = "./img/title-screen.png";
+    }if(LF1.state.keypress.space){
+        drawPseudo(LF1.ctx, LF1.state.offset, LF1.colors.ground, LF1.colors.groundDark, LF1.canvas.width);
+        drawStraightL();
+        drawStraightR();
+        drawCar();
+        drawScore();
+        drawTimer();
+        gameTimers();
+        gamePlay();
+    }
+     
+    
   
      //Draws road markers
     //  drawRoad(LF1.settings.road.min * 1.30, LF1.settings.road.max * 1.30, 10, LF1.colors.roadLine);
@@ -203,11 +228,7 @@ function gameLoop(){
     //  Draws and Repeats lanes dividers
     //  drawRoad(3, 24, 0, LF1.ctx.createPattern(LF1.canvas2, 'repeat'));
      //Draws car. Game still works without function
-     drawCar();
-     drawScore();
-     drawTimer();
-     gameTimers();
-     gamePlay();
+     
      if (LF1.state.trigger === true){
         drawCPU(cpu,400,60,30);
      };
@@ -279,6 +300,10 @@ function turnReset () {
 function calcMovement() {
     var move = LF1.state.speed * 0.01
     var newCurve = 0;
+    if(LF1.state.keypress.space){
+        LF1.state.gameStart = true;
+    }
+
     if(LF1.state.keypress.up) {
       LF1.state.speed += LF1.state.car.acc - (LF1.state.speed * 0.015);
     } else if (LF1.state.speed > 0) {
@@ -434,8 +459,6 @@ function drawStraightR() {
 //     // LF1.ctx.lineTo(200, LF1.canvas.length);
 // }
 
-
-
 function drawCar() {
     var carWidth = 160;
     var carHeight = 50;
@@ -482,25 +505,30 @@ function keyDown(e) {
 }
 
 function move(e, isKeyDown) {
-  if(e.keyCode >= 37 && e.keyCode <= 40) {
-    e.preventDefault();
-  }
 
-  if(e.keyCode === 37) {
-    LF1.state.keypress.left = isKeyDown;
-  } 
+    if(e.keyCode === 32){
+        LF1.state.keypress.space = true;
+    }
 
-  if(e.keyCode === 38) {
-    LF1.state.keypress.up = isKeyDown;
-  } 
+    if(e.keyCode >= 37 && e.keyCode <= 40) {
+        e.preventDefault();
+    }
 
-  if(e.keyCode === 39) {
-    LF1.state.keypress.right = isKeyDown;
-  } 
+    if(e.keyCode === 37) {
+        LF1.state.keypress.left = isKeyDown;
+    } 
 
-  if(e.keyCode === 40) {
-    LF1.state.keypress.down = isKeyDown;
-  }
+    if(e.keyCode === 38) {
+        LF1.state.keypress.up = isKeyDown;
+    } 
+
+    if(e.keyCode === 39) {
+        LF1.state.keypress.right = isKeyDown;
+    } 
+
+    if(e.keyCode === 40) {
+        LF1.state.keypress.down = isKeyDown;
+    }
 }
 
 
