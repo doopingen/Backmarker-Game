@@ -54,7 +54,6 @@ var LF1 = {
     },
     state: {
         trigger: false,
-        gameStart: false,
         gameOver: false,
         gameSecTimer: 0,
         score: 1,
@@ -101,21 +100,10 @@ LF1.canvas2.height = LF1.canvas.height;
 LF1.ctx2 = LF1.canvas2.getContext('2d');
 window.addEventListener("keydown", keyDown, false);
 window.addEventListener("keyup", keyUp, false);
+
 // startGame();
-
-// function startGame() {
-//     
-//     titleBox.onload = function() {
-        
- 
-//     }
-//     
-// }
-
-
-    drawBg();
-    gameLoop();
-
+drawBg();
+gameLoop();
 
 // if(LF1.state.straight === false){
 //     for(i = 0; i < 3; i++) {
@@ -142,10 +130,10 @@ function gameOver() {
 
 }
 
-function drawScore() {
+function drawScore(x,y) {
     LF1.ctx.font = "16px Arial";
     LF1.ctx.fillStyle = "#000000";
-    LF1.ctx.fillText("Score: "+LF1.state.score, 20, 20);
+    LF1.ctx.fillText("Score: "+LF1.state.score, x, y);
 }
 
 function drawTimer(){
@@ -179,8 +167,6 @@ function drawCPU(image, y, width, height) {
 function gameLoop(){
     calcMovement();
     
-  
-    
     // if(LF1.state.speed > 0) {
       // Moves the background left or right depending on keypress
        LF1.state.bgpos += (LF1.state.currentCurve * 0.04) * (LF1.state.speed * 0.2);
@@ -201,8 +187,8 @@ function gameLoop(){
        LF1.state.startDark = !LF1.state.startDark;
      }
 
-     //Draws background 
-     if (!LF1.state.keypress.space){
+     //Game loop starts here
+     if (!LF1.state.keypress.space && !LF1.state.gameOver){
         LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
         titleBox.src = "./img/title-screen.png";
     }if(LF1.state.keypress.space){
@@ -210,14 +196,12 @@ function gameLoop(){
         drawStraightL();
         drawStraightR();
         drawCar();
-        drawScore();
+        drawScore(20,20);
         drawTimer();
         gameTimers();
         gamePlay();
     }
      
-    
-  
      //Draws road markers
     //  drawRoad(LF1.settings.road.min * 1.30, LF1.settings.road.max * 1.30, 10, LF1.colors.roadLine);
      //Draws lane dividers that offset
@@ -276,8 +260,14 @@ function gamePlay() {
         rightTurn();
     }if(LF1.state.time == 10){
         turnReset();
+    }if(LF1.state.time == 0){
+        LF1.state.gameOver = true;
+        LF1.state.keypress.space = false;
+        drawScore(20,20);
+        LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
     }
 }
+
 
 function rightTurn () {
     for(i = 0; i < 3; i++) {
@@ -355,11 +345,11 @@ function calcMovement() {
     //   LF1.state.curve = newCurve;
     // }
     
-    if(LF1.state.currentCurve < LF1.state.curve && move < Math.abs(LF1.state.currentCurve - LF1.state.curve)) {
-      LF1.state.currentCurve += move;
-    }else if(LF1.state.currentCurve > LF1.state.curve && move < Math.abs(LF1.state.currentCurve - LF1.state.curve)) {
-      LF1.state.currentCurve -= move;
-    }
+    // if(LF1.state.currentCurve < LF1.state.curve && move < Math.abs(LF1.state.currentCurve - LF1.state.curve)) {
+    //   LF1.state.currentCurve += move;
+    // }else if(LF1.state.currentCurve > LF1.state.curve && move < Math.abs(LF1.state.currentCurve - LF1.state.curve)) {
+    //   LF1.state.currentCurve -= move;
+    // }
     
     if(Math.abs(LF1.state.xpos) > 550) {
       LF1.state.speed *= 0.96;
