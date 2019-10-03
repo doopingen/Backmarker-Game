@@ -126,26 +126,29 @@ function gamePlaySignal() {
 
 }
 
-function gameOver() {
-
+function resetGame() {
+    LF1.state.keypress.space = false;
+    LF1.state.gameOver = false;
+    LF1.state.time = 50;
+    LF1.state.score = 0;
 }
 
-function drawScore(x,y) {
-    LF1.ctx.font = "16px Arial";
+function drawScore(fSize,x,y) {
+    LF1.ctx.font = `${fSize}px Arial`;
     LF1.ctx.fillStyle = "#000000";
     LF1.ctx.fillText("Score: "+LF1.state.score, x, y);
 }
 
-function drawTimer(){
-    LF1.ctx.font = "16px Arial";
+function drawTimer(fSize,x,y){
+    LF1.ctx.font = `${fSize}px Arial`;
     LF1.ctx.fillStyle = "#000000";
-    LF1.ctx.fillText("Time: "+LF1.state.time, 20, 40); 
+    LF1.ctx.fillText("Time: "+LF1.state.time, x, y); 
 }
 
-function drawSignal(){
-    LF1.ctx.font = "16px Arial";
+function drawSignal(fSize,x,y){
+    LF1.ctx.font = `${fSize}px Arial`;
     LF1.ctx.fillStyle = "#000000";
-    LF1.ctx.fillText(+LF1.state.signal, 40, 40); 
+    LF1.ctx.fillText(+LF1.state.signal, x, y); 
 }
 
 function drawBillLeft(image, x, y, width, height,) {
@@ -191,15 +194,20 @@ function gameLoop(){
      if (!LF1.state.keypress.space && !LF1.state.gameOver){
         LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
         titleBox.src = "./img/title-screen.png";
-    }if(LF1.state.keypress.space){
+    }if(LF1.state.keypress.space && !LF1.state.gameOver){
         drawPseudo(LF1.ctx, LF1.state.offset, LF1.colors.ground, LF1.colors.groundDark, LF1.canvas.width);
         drawStraightL();
         drawStraightR();
         drawCar();
-        drawScore(20,20);
-        drawTimer();
+        drawScore(16,20,20);
+        drawTimer(16,20,40);
         gameTimers();
         gamePlay();
+    }if(!LF1.state.keypress.space && LF1.state.gameOver){
+        LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
+        drawScore(30,150,250);
+    }if(LF1.state.keypress.space && LF1.state.gameOver){
+        resetGame();
     }
      
      //Draws road markers
@@ -263,11 +271,8 @@ function gamePlay() {
     }if(LF1.state.time == 0){
         LF1.state.gameOver = true;
         LF1.state.keypress.space = false;
-        drawScore(20,20);
-        LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
     }
 }
-
 
 function rightTurn () {
     for(i = 0; i < 3; i++) {
