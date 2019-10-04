@@ -61,7 +61,7 @@ var LF1 = {
         trigger: false,
         gameOver: false,
         gameSecTimer: 0,
-        score: 1,
+        score: 0,
         frames: 0,
         time: 50,
         bgpos: 0,
@@ -76,7 +76,7 @@ var LF1 = {
             friction: 0.4,
             acc: 0.85,
             deAcc: 0.5,
-            xpos: 145,
+            xpos: 175,
             ypos: 370,
             spaceOnLeft: 0,
             spaceOnRight: 0,
@@ -127,17 +127,31 @@ gameLoop();
 // }
 // text,fSize,x,y,color
 
+function getRandomInt(max) {
+    LF1.race.turnRoll =  Math.floor(Math.random() * Math.floor(max));
+}
+
 function turnSignal() {
-    // condition ? exprIfTrue : exprIfFalse
-    LF1.race.turnRoll === 1 && LF1.race.signal ? drawSignal("Go Right",50,120,160,"red") :  drawSignal("Go Left",50,160,160,"red");
+    LF1.race.turnRoll === 1 && LF1.race.signal ? drawSignal("Go Right",50,120,160,"red") :  drawSignal("Go Left",50,120,160,"red");
 }
 
 function incCPU(){
-    if(LF1.race.turnRoll === 1 && LF1.state.car.spaceOnRight < -150){
+    if(LF1.race.turnRoll === 0 && LF1.state.car.spaceOnLeft < -100){
+        drawCPU(cpu,400,60,30);
         drawSignal("Clear",50,150,160,"green");
-        drawCPU(cpu,400,60,30)
-    }if(LF1.race.turnRoll === 1 && LF1.state.car.spaceOnRight > -150){
-        drawSignal("Boom",30,250,250,"red");
+    }if(LF1.race.turnRoll === 1 && LF1.state.car.spaceOnRight > -100){
+        LF1.state.car.crash = true;
+        LF1.state.input = false;
+        if(!LF1.state.input && LF1.state.frames === 59){
+            LF1.state.gameOver = true;
+            LF1.state.keypress.space = false;
+            LF1.state.input = true;
+        }
+    }if(LF1.race.turnRoll === 1 && LF1.state.car.spaceOnRight < -80){
+        drawCPU(cpu,400,60,30);
+        drawSignal("Clear1",50,150,160,"green");
+    }if(LF1.race.turnRoll === 1 && LF1.state.car.spaceOnRight > -80){
+        LF1.state.car.crash = true;
         LF1.state.input = false;
         if(!LF1.state.input && LF1.state.frames === 59){
             LF1.state.gameOver = true;
@@ -152,6 +166,8 @@ function resetGame() {
     LF1.state.gameOver = false;
     LF1.state.time = 50;
     LF1.state.score = 0;
+    LF1.state.car.crash = false;
+    LF1.state.gameSecTimer = 0;
 }
 
 function drawScore(fSize,x,y) {
@@ -195,16 +211,20 @@ function drawBillLeft(image, x, y, width, height,) {
 function player1() {
     var carWidth = 90;
     var carHeight = 40;
-    if(LF1.state.car.normie){
-        LF1.ctx.fillStyle = 'green';
-        LF1.ctx.fillRect(LF1.state.car.xpos, LF1.state.car.ypos, carWidth, carHeight);
+    var norm = new Image(130, 70);
+    var turn = new Image(130, 70);
+    var crash = new Image(130, 70);
+    norm.src = "./img/car.png";
+    turn.src = "./img/turn.png";
+    crash.src = "./img/crash.png";
+    LF1.state.score = LF1.state.gameSecTimer * 3;
+    if(LF1.state.car.normie && !LF1.state.car.turn && !LF1.state.car.crash){
+        LF1.ctx.drawImage(norm, LF1.state.car.xpos, LF1.state.car.ypos, carWidth, carHeight);
+    }if(LF1.state.car.normie && LF1.state.car.turn && !LF1.state.car.crash){
+        LF1.ctx.drawImage(turn, LF1.state.car.xpos, LF1.state.car.ypos, carWidth, carHeight);
+    }if(LF1.state.car.normie && !LF1.state.car.turn && LF1.state.car.crash){
+        LF1.ctx.drawImage(crash, LF1.state.car.xpos, LF1.state.car.ypos, carWidth, carHeight);
     }
-    
-    // if(LF1.state.car.turn){
-
-    // }if(LF1.state.car.crash){
-
-    // }
 }
 
 function drawCPU(image, y, width, height) {
@@ -238,7 +258,7 @@ function gameLoop(){
      }
 
      //Game state logic starts here
-     if (!LF1.state.keypress.space && !LF1.state.gameOver && LF1.state.input){
+    if (!LF1.state.keypress.space && !LF1.state.gameOver && LF1.state.input){
         LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
         titleBox.src = "./img/title-screen.png";
         calcMovement();
@@ -248,76 +268,115 @@ function gameLoop(){
         drawStraightL();
         drawStraightR();
         player1();
-        drawScore(30,20,30);
-        drawTimer(30,20,60);
+        drawScore(30,20,70);
+        drawTimer(30,20,100);
         gameTimers();
     }if(LF1.state.keypress.space && !LF1.state.gameOver && !LF1.state.input){
         drawPseudo(LF1.ctx, LF1.state.offset, LF1.colors.ground, LF1.colors.groundDark, LF1.canvas.width);
         drawStraightL();
         drawStraightR();
         player1();
-        drawScore(30,20,30);
-        drawTimer(30,20,60);
+        drawScore(30,20,70);
+        drawTimer(30,20,100);
         gameTimers();
     }if(!LF1.state.keypress.space && LF1.state.gameOver){
         LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
         drawScore(30,150,250);
     }if(LF1.state.keypress.space && LF1.state.gameOver){
         resetGame();
+    }if (LF1.state.trigger === true){
+        drawCPU(cpu,400,60,30);
     }
 
     switch (LF1.state.time) {
         case 40:
             rightTurn();
             break;
+        case 39:
+            LF1.state.car.turn = true;
+            break;    
         case 35:
             turnReset();
+            LF1.state.car.turn = false;
             break;
         case 30:
             turnSignal();
             break;
-        case 28:
+        case 29:
             incCPU();
-            break;              
+            break;
+        case 28:
+            turnSignal();
+            break;
+        case 27:
+            incCPU();
+            break;            
         case 26:
             turnSignal();
-            break;              
+            break;
+        case 25:
+            incCPU();
+            break;                
         case 24:
+            turnSignal();
+            break;
+        case 23:
             incCPU();
-            break;              
+            break;                  
         case 22:
-            turnSignal();
-            break;              
-        case 20:
-            incCPU();
-            break;              
+            rightTurn();
+            break; 
+        case 21:
+            LF1.state.car.turn = true;
+            break;                 
         case 18:
-            turnSignal();
-            break;              
+            turnReset();
+            break;  
+        case 17:
+            LF1.state.car.turn = true;
+            break;                
+        case 18:
+            
+            break;   
+        case 17:
+            
+            break;               
         case 16:
-            incCPU();
-            break;              
+            
+            break; 
+        case 15:
+            
+            break;                 
         case 14:
-            turnSignal();
-            break;              
+
+            break;
+        case 13:
+            
+            break;                  
         case 12:
-            incCPU();
-            break;              
+            break;
+        case 11:
+            break;                  
         case 10:
-            turnSignal();
-            break;              
+            break;
+        case 9:
+            break;                  
         case 8:
-            incCPU();
-            break;              
+            break;
+        case 7:
+            break;                  
         case 6:
-            turnSignal();
-            break;              
+            break;  
+        case 5:
+            break;                
         case 4:
-            incCPU()
-            break;              
+            break;
+        case 3:
+            break;                  
         case 2:
-            turnSignal();
-            break;              
+            break; 
+        case 1:
+            break;    
         case 0:
             LF1.state.gameOver = true;
             LF1.state.keypress.space = false;         
@@ -334,9 +393,7 @@ function gameLoop(){
     //  drawRoad(3, 24, 0, LF1.ctx.createPattern(LF1.canvas2, 'repeat'));
      //Draws car. Game still works without function
      
-     if (LF1.state.trigger === true){
-        drawCPU(cpu,400,60,30);
-     };
+     
      
     //  drawBillLeft(bb1,70,240,60,30,)
     //  setTimeout(function(){drawBillLeft(bb1,70,240,60,30,)}, 1000)
@@ -429,15 +486,15 @@ function calcMovement() {
     
     if(LF1.state.speed) {
       if(LF1.state.keypress.left) {
-          LF1.state.car.spaceOnLeft--;
-          LF1.state.car.spaceOnRight++;
+          LF1.state.car.spaceOnLeft-=4;
+          LF1.state.car.spaceOnRight+=4;
         // LF1.state.xpos += (Math.abs(LF1.state.turn) + 7 + (LF1.state.speed > LF1.state.car.maxSpeed / 4 ? (LF1.state.car.maxSpeed - (LF1.state.speed / 2)) : LF1.state.speed)) * 0.2;
         // LF1.state.turn -= 1;
       }
     
       if(LF1.state.keypress.right) {
-          LF1.state.car.spaceOnLeft++;
-          LF1.state.car.spaceOnRight--;
+          LF1.state.car.spaceOnLeft+=4;
+          LF1.state.car.spaceOnRight-=4;
         // LF1.state.xpos -= (Math.abs(LF1.state.turn) + 7 + (LF1.state.speed > LF1.state.car.maxSpeed / 4 ? (LF1.state.car.maxSpeed - (LF1.state.speed / 2)) : LF1.state.speed)) * 0.2;
         // LF1.state.turn += 1;
       }
@@ -634,5 +691,7 @@ function move(e, isKeyDown) {
     }
 }
 
-
+setInterval(function(){
+    getRandomInt(2);
+},1000)
 
