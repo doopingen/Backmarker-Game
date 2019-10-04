@@ -2,6 +2,7 @@ var delay = 4000;
 var cpu = new Image(130, 70);
 var bb1 = new Image(100, 50);
 var titleBox = new Image(450, 450);
+var endGame = new Image(450, 450);
 var temp = 0;
 
 // var billboard = [{
@@ -149,7 +150,7 @@ function incCPU(){
         }
     }if(LF1.race.turnRoll === 1 && LF1.state.car.spaceOnRight < -80){
         drawCPU(cpu,400,60,30);
-        drawSignal("Clear1",50,150,160,"green");
+        drawSignal("Clear",50,150,160,"green");
     }if(LF1.race.turnRoll === 1 && LF1.state.car.spaceOnRight > -80){
         LF1.state.car.crash = true;
         LF1.state.input = false;
@@ -280,7 +281,8 @@ function gameLoop(){
         drawTimer(30,20,100);
         gameTimers();
     }if(!LF1.state.keypress.space && LF1.state.gameOver){
-        LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
+        LF1.ctx.drawImage(endGame, 0, 0, 450, 450);
+        endGame.src = "./img/game-over-screen.png"
         drawScore(30,150,250);
     }if(LF1.state.keypress.space && LF1.state.gameOver){
         resetGame();
@@ -289,6 +291,28 @@ function gameLoop(){
     }
 
     switch (LF1.state.time) {
+        case 48:
+            drawBillLeft(bb1,70,240,60,30,);
+            break;   
+        case 47:
+            drawBillLeft(bb1,20,230,90,60,);
+            break;               
+        case 46:
+            drawBillLeft(bb1,-80,230,130,100,);
+            LF1.race.turnRoll = 0;
+            break; 
+        case 45:
+            turnSignal();   
+        case 44:
+            drawBillLeft(bb1,70,240,60,30,);
+            break;   
+        case 43:
+            incCPU();
+            drawBillLeft(bb1,20,230,90,60,);
+            break;               
+        case 42:
+            drawBillLeft(bb1,-80,230,130,100,);
+            break; 
         case 40:
             rightTurn();
             break;
@@ -298,30 +322,30 @@ function gameLoop(){
         case 35:
             turnReset();
             LF1.state.car.turn = false;
+            LF1.race.turnRoll = 0;
             break;
         case 30:
             turnSignal();
             break;
         case 29:
-            incCPU();
             break;
         case 28:
-            turnSignal();
+            incCPU();
             break;
         case 27:
-            incCPU();
+            drawBillLeft(bb1,20,230,90,60,);
+            LF1.race.turnRoll = 1;
             break;            
         case 26:
+            drawBillLeft(bb1,-80,230,130,100,);
             turnSignal();
             break;
         case 25:
-            incCPU();
             break;                
         case 24:
-            turnSignal();
+            incCPU();
             break;
         case 23:
-            incCPU();
             break;                  
         case 22:
             rightTurn();
@@ -333,43 +357,61 @@ function gameLoop(){
             turnReset();
             break;  
         case 17:
-            LF1.state.car.turn = true;
+            LF1.state.car.turn = false;
+            LF1.race.turnRoll = 0;
             break;                
         case 18:
-            
+            drawBillLeft(bb1,70,240,60,30,);
+            turnSignal();
             break;   
         case 17:
-            
+            drawBillLeft(bb1,20,230,90,60,);
             break;               
         case 16:
-            
+            drawBillLeft(bb1,-80,230,130,100,);
+            incCPU();
             break; 
         case 15:
-            
+            LF1.race.turnRoll = 0;
             break;                 
         case 14:
-
+            turnSignal();
+            drawBillLeft(bb1,70,240,60,30,);
             break;
         case 13:
-            
+            drawBillLeft(bb1,20,230,90,60,);
             break;                  
         case 12:
+            incCPU();
+            drawBillLeft(bb1,-80,230,130,100,);
             break;
         case 11:
+            LF1.race.turnRoll = 1;
             break;                  
         case 10:
+            turnSignal()
+            drawBillLeft(bb1,70,240,60,30,);
             break;
         case 9:
+            drawBillLeft(bb1,20,230,90,60,);
             break;                  
         case 8:
+            incCPU();
+            drawBillLeft(bb1,-80,230,130,100,);
             break;
         case 7:
+            LF1.race.turnRoll = 0;
             break;                  
         case 6:
-            break;  
+            turnSignal();
+            drawBillLeft(bb1,70,240,60,30,); 
+            break; 
         case 5:
+            drawBillLeft(bb1,20,230,90,60,);
             break;                
         case 4:
+            incCPU();
+            drawBillLeft(bb1,-80,230,130,100,); 
             break;
         case 3:
             break;                  
@@ -691,7 +733,10 @@ function move(e, isKeyDown) {
     }
 }
 
-setInterval(function(){
-    getRandomInt(2);
-},1000)
+// function randomMove() {
+//     setInterval(function(){
+//         getRandomInt(2);
+//     },2800)
+// }
+
 
