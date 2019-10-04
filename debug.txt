@@ -1,0 +1,44 @@
+TODO:
+
+Game play logic braindump:
+
+1. Player sprite states and artwork
+- Straight state
+- Turn state
+- crash state
+
+2. Main gameplay
+- signal. Show signal on screen. There is one second to act. If "space on left or right" doesn't meet minimum, then:
+-- crash logic. Game Over
+-- Reset Game
+
+3. Readme detail
+- How to play
+- How its made
+- Wireframes
+- development process
+- inspiration
+
+4. HTML/CSS
+- Find game cabinet overlay artwork
+- create direction graphics
+
+5. Code cleanup
+- Clear out comments
+- Verify indenting
+- Verify spacing
+
+6. Art
+- Game over screen
+- arcade cabinet design
+- trees
+- additional billboard graphics
+
+7. Gameplay functions
+- place trees
+- place billboards
+- player sprites
+- setup game fonts
+- player tracking speed
+- sky background
+

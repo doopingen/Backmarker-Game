@@ -52,7 +52,12 @@ var LF1 = {
         max: 700,
       }
     },
+    race: {
+        turnRoll: 1,
+        signal: true,
+    },
     state: {
+        input: true,
         trigger: false,
         gameOver: false,
         gameSecTimer: 0,
@@ -64,11 +69,8 @@ var LF1 = {
         startDark: true,
         curve: 0,
         currentCurve: 0,
-        turn: 1,
         speed: 27,
         xpos: 0,
-        straight: null,
-        signal: null,
         car: {
             maxSpeed: 35,
             friction: 0.4,
@@ -78,6 +80,8 @@ var LF1 = {
             ypos: 370,
             spaceOnLeft: 0,
             spaceOnRight: 0,
+            turn: false,
+            crash: false,
       },
       keypress: {
           space: false,
@@ -120,10 +124,26 @@ gameLoop();
 //        track[0].x -= i;
 //    }
 // }
+// text,fSize,x,y,color
 
-function gamePlaySignal() {
-    var RandomNum;
+function turnSignal() {
+    // condition ? exprIfTrue : exprIfFalse
+    LF1.race.turnRoll === 1 && LF1.race.signal ? drawSignal("Go Right",50,120,160,"red") :  drawSignal("Go Left",50,160,160,"red");
+}
 
+function incCPU(){
+    if(LF1.race.turnRoll === 1 && LF1.state.car.spaceOnRight < -150){
+        drawSignal("Clear",50,150,160,"green");
+        drawCPU(cpu,400,60,30)
+    }if(LF1.race.turnRoll === 1 && LF1.state.car.spaceOnRight > -150){
+        drawSignal("Boom",30,250,250,"red");
+        LF1.state.input = false;
+        if(!LF1.state.input && LF1.state.frames === 59){
+            LF1.state.gameOver = true;
+            LF1.state.keypress.space = false;
+            LF1.state.input = true;
+        }
+    }
 }
 
 function resetGame() {
@@ -134,30 +154,48 @@ function resetGame() {
 }
 
 function drawScore(fSize,x,y) {
-    LF1.ctx.font = `${fSize}px Arial`;
+    LF1.ctx.font = `${fSize}px ArcadeClassic`;
     LF1.ctx.fillStyle = "#000000";
     LF1.ctx.fillText("Score: "+LF1.state.score, x, y);
 }
 
 function drawTimer(fSize,x,y){
-    LF1.ctx.font = `${fSize}px Arial`;
+    LF1.ctx.font = `${fSize}px ArcadeClassic`;
     LF1.ctx.fillStyle = "#000000";
     LF1.ctx.fillText("Time: "+LF1.state.time, x, y); 
 }
 
-function drawSignal(fSize,x,y){
-    LF1.ctx.font = `${fSize}px Arial`;
-    LF1.ctx.fillStyle = "#000000";
-    LF1.ctx.fillText(+LF1.state.signal, x, y); 
+function drawSignal(text,fSize,x,y,color){
+    LF1.ctx.font = `${fSize}px ArcadeClassic`;
+    LF1.ctx.fillStyle = color;
+    LF1.ctx.fillText(text, x, y); 
 }
 
 function drawBillLeft(image, x, y, width, height,) {
-    var travel = LF1.state.speed;
     x += LF1.state.car.spaceOnRight;
     // var xpos = (LF1.state.car.spaceOnRight) + LF1.state.speed *2;
     // var ypos = (LF1.settings.skySize - 20) + LF1.state.speed ;
     bb1.src = "./img/bb1.png";
     LF1.ctx.drawImage(image, x, y, width, height);
+}
+
+function drawP1Normal(image, y, width, height){
+
+}
+
+function drawP1Turn(image, y, width, height){
+    
+}
+
+function drawP1normal(image, y, width, height){
+    
+}
+
+function player1() {
+    var carWidth = 90;
+    var carHeight = 40;
+    LF1.ctx.fillStyle = 'green';
+    LF1.ctx.fillRect(LF1.state.car.xpos, LF1.state.car.ypos, carWidth, carHeight);
 }
 
 function drawCPU(image, y, width, height) {
@@ -168,7 +206,7 @@ function drawCPU(image, y, width, height) {
 }
 
 function gameLoop(){
-    calcMovement();
+    // calcMovement();
     
     // if(LF1.state.speed > 0) {
       // Moves the background left or right depending on keypress
@@ -190,24 +228,90 @@ function gameLoop(){
        LF1.state.startDark = !LF1.state.startDark;
      }
 
-     //Game loop starts here
-     if (!LF1.state.keypress.space && !LF1.state.gameOver){
+     //Game state logic starts here
+     if (!LF1.state.keypress.space && !LF1.state.gameOver && LF1.state.input){
         LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
         titleBox.src = "./img/title-screen.png";
-    }if(LF1.state.keypress.space && !LF1.state.gameOver){
+        calcMovement();
+    }if(LF1.state.keypress.space && !LF1.state.gameOver && LF1.state.input){
+        calcMovement();
         drawPseudo(LF1.ctx, LF1.state.offset, LF1.colors.ground, LF1.colors.groundDark, LF1.canvas.width);
         drawStraightL();
         drawStraightR();
-        drawCar();
-        drawScore(16,20,20);
-        drawTimer(16,20,40);
+        player1();
+        drawScore(30,20,30);
+        drawTimer(30,20,60);
         gameTimers();
-        gamePlay();
+    }if(LF1.state.keypress.space && !LF1.state.gameOver && !LF1.state.input){
+        drawPseudo(LF1.ctx, LF1.state.offset, LF1.colors.ground, LF1.colors.groundDark, LF1.canvas.width);
+        drawStraightL();
+        drawStraightR();
+        player1();
+        drawScore(30,20,30);
+        drawTimer(30,20,60);
+        gameTimers();
     }if(!LF1.state.keypress.space && LF1.state.gameOver){
         LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
         drawScore(30,150,250);
     }if(LF1.state.keypress.space && LF1.state.gameOver){
         resetGame();
+    }
+
+    switch (LF1.state.time) {
+        case 40:
+            rightTurn();
+            break;
+        case 35:
+            turnReset();
+            break;
+        case 30:
+            turnSignal();
+            break;
+        case 28:
+            incCPU();
+            break;              
+        case 26:
+            turnSignal();
+            break;              
+        case 24:
+            incCPU();
+            break;              
+        case 22:
+            turnSignal();
+            break;              
+        case 20:
+            incCPU();
+            break;              
+        case 18:
+            turnSignal();
+            break;              
+        case 16:
+            incCPU();
+            break;              
+        case 14:
+            turnSignal();
+            break;              
+        case 12:
+            incCPU();
+            break;              
+        case 10:
+            turnSignal();
+            break;              
+        case 8:
+            incCPU();
+            break;              
+        case 6:
+            turnSignal();
+            break;              
+        case 4:
+            incCPU()
+            break;              
+        case 2:
+            turnSignal();
+            break;              
+        case 0:
+            LF1.state.gameOver = true;
+            LF1.state.keypress.space = false;         
     }
      
      //Draws road markers
@@ -239,40 +343,42 @@ function gameLoop(){
      requestAnimationFrame(gameLoop);
 }
 
-function gamePlay() {
-    if(LF1.state.time == 40){
-        rightTurn();
-    }if(LF1.state.time == 35){
-        turnReset();
-    }
+
+// function gamePlay() {
+//     if(LF1.state.time == 40){
+//         rightTurn();
+//     }if(LF1.state.time == 35){
+//         turnReset();
+//     }
 
  
 
-    if(LF1.state.time == 29){
-        LF1.state.trigger = true;
-    }if(LF1.state.time == 28){
-        LF1.state.trigger = false;
-    }if(LF1.state.time == 27){
-        LF1.state.trigger = true;
-    }if(LF1.state.time == 26){
-        LF1.state.trigger = false;
-    } 
+//     if(LF1.state.time == 29){
+//         LF1.state.trigger = true;
+//     }if(LF1.state.time == 28){
+//         LF1.state.trigger = false;
+//     }if(LF1.state.time == 27){
+//         LF1.state.trigger = true;
+//     }if(LF1.state.time == 26){
+//         LF1.state.trigger = false;
+//     } 
 
-    if(LF1.state.time == 25){
-        rightTurn();
-    }if(LF1.state.time == 20){
-        turnReset();
-    }
+//     if(LF1.state.time == 25){
+//         rightTurn();
+//         LF1.state.rightTurn = true;
+//     }if(LF1.state.time == 20){
+//         turnReset();
+//     }
 
-    if(LF1.state.time == 15){
-        rightTurn();
-    }if(LF1.state.time == 10){
-        turnReset();
-    }if(LF1.state.time == 0){
-        LF1.state.gameOver = true;
-        LF1.state.keypress.space = false;
-    }
-}
+//     if(LF1.state.time == 15){
+//         rightTurn();
+//     }if(LF1.state.time == 10){
+//         turnReset();
+//     }if(LF1.state.time == 0){
+//         LF1.state.gameOver = true;
+//         LF1.state.keypress.space = false;
+//     }
+// }
 
 function rightTurn () {
     for(i = 0; i < 3; i++) {
@@ -453,13 +559,6 @@ function drawStraightR() {
 //     // LF1.ctx.lineTo(0, LF1.canvas.length);
 //     // LF1.ctx.lineTo(200, LF1.canvas.length);
 // }
-
-function drawCar() {
-    var carWidth = 160;
-    var carHeight = 50;
-    LF1.ctx.fillStyle = 'green';
-    LF1.ctx.fillRect(LF1.state.car.xpos, LF1.state.car.ypos, carWidth, carHeight);
-}
 
 function drawPseudo(ctx, offset, lightColor, darkColor, width) {
     var pos = (LF1.settings.skySize - LF1.settings.ground.min) + offset;
