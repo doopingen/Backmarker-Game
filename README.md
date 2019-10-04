@@ -49,8 +49,8 @@ I spent a considerable amount of time looking into the various ins and outs with
 
 I worked on some wireframing as well to get an idea of how I wanted the game to look
 
-![GitHub Logo](/images/logo.png)
-Format: ![Alt Text](url)
+![Wireframing](/img/Wireframe.png)
+
 
 **Day2** 
 
