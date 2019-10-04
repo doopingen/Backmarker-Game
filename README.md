@@ -74,8 +74,23 @@ With the game coming into focus, I took the game for some test runs and found th
 
 I worked on the project for a total of six actual days. The last day I spent polishing the game logic, hit detection, scoring, and signaling. The majority of the day was spent working with my original art and sprites used in the game. 
 
+**Sprites**
+
+![Turn Sprite](/img/turn.png) ![Straight Sprite](/img/car.png) ![Death Sprite](/img/crash.png)
+
+![Billboard](/img/crash.png)
+
 **Artwork**
 
 I will be putting some original artwork on here. Just working on the final details right now for that.
+
+![Cabinet](/img/cabinet-revised.png)
+
+
+
+
+
+
+
 
 
