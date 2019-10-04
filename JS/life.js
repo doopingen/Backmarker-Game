@@ -80,6 +80,7 @@ var LF1 = {
             ypos: 370,
             spaceOnLeft: 0,
             spaceOnRight: 0,
+            normie: true,
             turn: false,
             crash: false,
       },
@@ -179,23 +180,31 @@ function drawBillLeft(image, x, y, width, height,) {
     LF1.ctx.drawImage(image, x, y, width, height);
 }
 
-function drawP1Normal(image, y, width, height){
+// function drawP1Normal(image, y, width, height){
 
-}
+// }
 
-function drawP1Turn(image, y, width, height){
+// function drawP1Turn(image, y, width, height){
     
-}
+// }
 
-function drawP1normal(image, y, width, height){
+// function drawP1normal(image, y, width, height){
     
-}
+// }
 
 function player1() {
     var carWidth = 90;
     var carHeight = 40;
-    LF1.ctx.fillStyle = 'green';
-    LF1.ctx.fillRect(LF1.state.car.xpos, LF1.state.car.ypos, carWidth, carHeight);
+    if(LF1.state.car.normie){
+        LF1.ctx.fillStyle = 'green';
+        LF1.ctx.fillRect(LF1.state.car.xpos, LF1.state.car.ypos, carWidth, carHeight);
+    }
+    
+    // if(LF1.state.car.turn){
+
+    // }if(LF1.state.car.crash){
+
+    // }
 }
 
 function drawCPU(image, y, width, height) {

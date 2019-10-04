@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>Life F1 Racing Game</title>
-    <style>
-        @font-face {
-            font-family: 'ArcadeClassic';
-            src: url('fonts/ARCADECLASSIC.ttf');
-        }
-    	* { padding: 0; margin: 0; }
-        canvas { display: block; margin: 0 auto; }
-        body { background-color: #000000; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-    </style>
-    <script
-    src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-    crossorigin="anonymous"></script>
+    <meta name="description" content="Backmarker, the arcade game">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" initial-scale="1.0">
+    <link rel="stylesheet" href="css/main.css" media="screen">
+    <title>Backmarker, the arcade game by Clay Darland</title>
 </head>
 <body>
-
-<canvas id="myCanvas" width="450" height="450"></canvas>
-
+    <header class="header"></header>
+    <main class="wrapper">
+        <div class="controls">
+            <h3>Backmarker: A slower car, usually in the process of being lapped by the leaders</h3>
+            <p>Pure racing...just casual. The back of the pack is not whack!</p>
+            <p>With Backmarker, you're racing with the best... and staying out of their way you jackass!</p>
+            <p>All you gotta do is bring it back in one piece k?</p>
+        </div>
+        <div class="game">
+            <canvas class="backmarker" id="backmarker" width="450" height="450"></canvas>
+            <img class="cabinet" src="img/cabinet-revisedv3.png" alt="Backmarker Arcade Cabinet">
+        </div>
+        <div class="about">
+            <h2>Controls</h2>
+            <h3>UP ARROW:<br>The Accelerator</h3>
+            <h3>DOWN ARROW:<br>The Brake</h3>
+            <h3>LEFT ARROW:<br>Steer Left</h3>
+            <h3>RIGHT ARROW:<br>Steer Right</h3>
+            <h3>SPACE BAR:<br>Start a new game</h3>
+        </div>
+    </main>
+    <footer class="footer"></footer>
 <script src="js/life.js"></script>
-
 </body>
 </html>

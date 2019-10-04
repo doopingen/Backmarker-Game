@@ -42,3 +42,18 @@ Game play logic braindump:
 - player tracking speed
 - sky background
 
+
+Readme organization
+
+- About the game:
+--Premise
+--Controls
+--Artwork
+
+- The creation process/inspiration
+-- Wireframe/concepts
+-- Pseudo 3d logic and resources used
+
+
+
+- The controls
