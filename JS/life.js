@@ -5,23 +5,6 @@ var titleBox = new Image(450, 450);
 var endGame = new Image(450, 450);
 var temp = 0;
 
-// var billboard = [{
-//     x: 70,
-//     y: 240,
-//     width: 60,
-//     height: 30,
-// },{
-//     x: 20,
-//     y: 230,
-//     width: 90,
-//     height: 60,
-// },{
-//     x: -80,
-//     y: 230,
-//     width: 90,
-//     height: 60,
-// }];
-
 var track = [{
     cpx: 100,
     cpy: 480,
@@ -111,23 +94,6 @@ window.addEventListener("keyup", keyUp, false);
 drawBg();
 gameLoop();
 
-// if(LF1.state.straight === false){
-//     for(i = 0; i < 3; i++) {
-//         temp++;
-//         track[0].cpx -= i;
-//         track[0].cpy -= i;
-//         track[0].x += i;
-//     }
-// }if(LF1.state.straight === true){
-//    for(i = 0; i < 3; i++) {
-//        temp++;
-//        track[0].cpx += i;
-//        track[0].cpy += i;
-//        track[0].x -= i;
-//    }
-// }
-// text,fSize,x,y,color
-
 function getRandomInt(max) {
     LF1.race.turnRoll =  Math.floor(Math.random() * Math.floor(max));
 }
@@ -196,18 +162,6 @@ function drawBillLeft(image, x, y, width, height,) {
     bb1.src = "./img/bb1.png";
     LF1.ctx.drawImage(image, x, y, width, height);
 }
-
-// function drawP1Normal(image, y, width, height){
-
-// }
-
-// function drawP1Turn(image, y, width, height){
-    
-// }
-
-// function drawP1normal(image, y, width, height){
-    
-// }
 
 function player1() {
     var carWidth = 90;
@@ -302,7 +256,8 @@ function gameLoop(){
             LF1.race.turnRoll = 0;
             break; 
         case 45:
-            turnSignal();   
+            turnSignal(); 
+            break;  
         case 44:
             drawBillLeft(bb1,70,240,60,30,);
             break;   
@@ -424,69 +379,8 @@ function gameLoop(){
             LF1.state.keypress.space = false;         
     }
      
-     //Draws road markers
-    //  drawRoad(LF1.settings.road.min * 1.30, LF1.settings.road.max * 1.30, 10, LF1.colors.roadLine);
-     //Draws lane dividers that offset
-    //  drawGround(LF1.ctx2, LF1.state.offset, LF1.colors.roadLine, LF1.colors.road, LF1.canvas.width);
-     //Draws road
-    //  drawRoad(LF1.settings.road.min, LF1.settings.road.max, 10, LF1.colors.road);
-    //  drawRoad2(LF1.colors.road);
-    //  Draws and Repeats lanes dividers
-    //  drawRoad(3, 24, 0, LF1.ctx.createPattern(LF1.canvas2, 'repeat'));
-     //Draws car. Game still works without function
-     
-     
-     
-    //  drawBillLeft(bb1,70,240,60,30,)
-    //  setTimeout(function(){drawBillLeft(bb1,70,240,60,30,)}, 1000)
-    //  setTimeout(function(){drawBillLeft(bb1,20,230,90,60,)}, 2000);
-    //  setTimeout(function(){drawBillLeft(bb1,-80,230,130,100,)}, 3000);
-    //  drawBillLeft(bb1,70,240,60,30,);
-    //  drawBillLeft(bb1,20,230,90,60,);
-    //  drawBillLeft(bb1,-80,230,130,100,);
-    // drawCPU(cpu,260,30,10);
-    // drawCPU(cpu,300,60,30);
-    // drawCPU(cpu,400,90,60);
-    //  playGame();
      requestAnimationFrame(gameLoop);
 }
-
-
-// function gamePlay() {
-//     if(LF1.state.time == 40){
-//         rightTurn();
-//     }if(LF1.state.time == 35){
-//         turnReset();
-//     }
-
- 
-
-//     if(LF1.state.time == 29){
-//         LF1.state.trigger = true;
-//     }if(LF1.state.time == 28){
-//         LF1.state.trigger = false;
-//     }if(LF1.state.time == 27){
-//         LF1.state.trigger = true;
-//     }if(LF1.state.time == 26){
-//         LF1.state.trigger = false;
-//     } 
-
-//     if(LF1.state.time == 25){
-//         rightTurn();
-//         LF1.state.rightTurn = true;
-//     }if(LF1.state.time == 20){
-//         turnReset();
-//     }
-
-//     if(LF1.state.time == 15){
-//         rightTurn();
-//     }if(LF1.state.time == 10){
-//         turnReset();
-//     }if(LF1.state.time == 0){
-//         LF1.state.gameOver = true;
-//         LF1.state.keypress.space = false;
-//     }
-// }
 
 function rightTurn () {
     for(i = 0; i < 3; i++) {
@@ -552,24 +446,6 @@ function calcMovement() {
     // section
     LF1.state.section -= LF1.state.speed;
     
-    // if(LF1.state.section < 0) {
-    //   LF1.state.section = randomRange(1000, 9000);
-      
-    //   newCurve = randomRange(-50, 50);
-      
-    //   if(Math.abs(LF1.state.curve - newCurve) < 20) {
-    //     newCurve = randomRange(-50, 50);
-    //   }
-      
-    //   LF1.state.curve = newCurve;
-    // }
-    
-    // if(LF1.state.currentCurve < LF1.state.curve && move < Math.abs(LF1.state.currentCurve - LF1.state.curve)) {
-    //   LF1.state.currentCurve += move;
-    // }else if(LF1.state.currentCurve > LF1.state.curve && move < Math.abs(LF1.state.currentCurve - LF1.state.curve)) {
-    //   LF1.state.currentCurve -= move;
-    // }
-    
     if(Math.abs(LF1.state.xpos) > 550) {
       LF1.state.speed *= 0.96;
     }
@@ -604,18 +480,6 @@ function randomRange(min, max) {
     return min + Math.random() * (max - min);
 }
 
-// function drawRoad(min, max, squishFactor, color) {
-//     var basePos = LF1.canvas.width + LF1.state.xpos;
-//     LF1.ctx.fillStyle = color;
-//     LF1.ctx.beginPath();
-//     LF1.ctx.moveTo(((basePos + min) / 2) - (LF1.state.currentCurve * 3), LF1.settings.skySize);
-//     LF1.ctx.quadraticCurveTo((((basePos / 2) + min)) + (LF1.state.currentCurve / 3) + squishFactor, LF1.settings.skySize + 52, (basePos + max) / 2, LF1.canvas.height);
-//     LF1.ctx.lineTo((basePos - max) / 2, LF1.canvas.height);
-//     LF1.ctx.quadraticCurveTo((((basePos / 2) - min)) + (LF1.state.currentCurve / 3) - squishFactor, LF1.settings.skySize + 52, ((basePos - min) / 2) - (LF1.state.currentCurve * 3), LF1.settings.skySize);
-//     LF1.ctx.closePath();
-//     LF1.ctx.fill();
-// }
-
 function drawStraightL() {
     LF1.ctx.beginPath();
     LF1.ctx.moveTo(0, LF1.settings.skySize);
@@ -641,32 +505,6 @@ function drawStraightR() {
     // LF1.ctx.lineTo(0, LF1.canvas.length);
     // LF1.ctx.lineTo(200, LF1.canvas.length);
 }
-
-// function drawCurveL() {
-//     LF1.ctx.beginPath();
-//     LF1.ctx.moveTo(0, LF1.settings.skySize);
-//     LF1.ctx.lineTo(0, LF1.canvas.height);
-//     LF1.ctx.quadraticCurveTo(50 - LF1.state.car.spaceOnLeft, 400, 50 - LF1.state.car.spaceOnLeft, LF1.settings.skySize)
-//     LF1.ctx.closePath();
-//     LF1.ctx.fillStyle = "#000";
-//     LF1.ctx.fill();
-//     // LF1.ctx.moveTo(0, LF1.settings.skySize);
-//     // LF1.ctx.lineTo(0, LF1.canvas.length);
-//     // LF1.ctx.lineTo(200, LF1.canvas.length);
-// }
-
-// function drawCurveR() {
-//     LF1.ctx.beginPath();
-//     LF1.ctx.moveTo(LF1.canvas.width, LF1.settings.skySize);
-//     LF1.ctx.lineTo(LF1.canvas.width, LF1.canvas.height);
-//     LF1.ctx.quadraticCurveTo((LF1.canvas.width + 100) + LF1.state.car.spaceOnRight, 400, 150 + LF1.state.car.spaceOnRight, LF1.settings.skySize)
-//     LF1.ctx.closePath();
-//     LF1.ctx.fillStyle = "#000";
-//     LF1.ctx.fill();
-//     // LF1.ctx.moveTo(0, LF1.settings.skySize);
-//     // LF1.ctx.lineTo(0, LF1.canvas.length);
-//     // LF1.ctx.lineTo(200, LF1.canvas.length);
-// }
 
 function drawPseudo(ctx, offset, lightColor, darkColor, width) {
     var pos = (LF1.settings.skySize - LF1.settings.ground.min) + offset;
