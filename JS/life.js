@@ -1,16 +1,4 @@
-var delay = 4000;
-var cpu = new Image(130, 70);
-var bb1 = new Image(100, 50);
-var titleBox = new Image(450, 450);
-var endGame = new Image(450, 450);
-var temp = 0;
-
-var track = [{
-    cpx: 100,
-    cpy: 480,
-    x: 200,
-}];
-
+//Game Objects literals
 var LF1 = {
     canvas: null,
     ctx: null,
@@ -81,6 +69,7 @@ var LF1 = {
     }
 };
 
+//DOM events
 LF1.canvas = document.getElementsByTagName('canvas')[0];
 LF1.ctx = LF1.canvas.getContext('2d');
 LF1.canvas2 = document.createElement('canvas');
@@ -90,18 +79,38 @@ LF1.ctx2 = LF1.canvas2.getContext('2d');
 window.addEventListener("keydown", keyDown, false);
 window.addEventListener("keyup", keyUp, false);
 
-// startGame();
+//Global Variables and Image attributes
+var delay = 4000;
+var cpu = new Image(130, 70);
+var bb1 = new Image(100, 50);
+var titleBox = new Image(450, 450);
+var endGame = new Image(450, 450);
+var temp = 0;
+
+//Track Details
+var track = [{
+    cpx: 100,
+    cpy: 480,
+    x: 200,
+}];
+
+//Initialize game. This is where the magic happens
 drawBg();
 gameLoop();
 
+/* ---------------------- Game Functions and Game State logic Start -------------------------- */
+
+//Generates integer for left/right decision making
 function getRandomInt(max) {
     LF1.race.turnRoll =  Math.floor(Math.random() * Math.floor(max));
 }
 
+//Ternary used for oncoming car decision and on-screen text
 function turnSignal() {
     LF1.race.turnRoll === 1 && LF1.race.signal ? drawSignal("Go Right",50,120,160,"red") :  drawSignal("Go Left",50,120,160,"red");
 }
 
+//Shoots CPU car forward after player has cleared themselves
 function incCPU(){
     if(LF1.race.turnRoll === 0 && LF1.state.car.spaceOnLeft < -100){
         drawCPU(cpu,400,60,30);
@@ -128,6 +137,7 @@ function incCPU(){
     }
 }
 
+//Resets game
 function resetGame() {
     LF1.state.keypress.space = false;
     LF1.state.gameOver = false;
@@ -137,32 +147,35 @@ function resetGame() {
     LF1.state.gameSecTimer = 0;
 }
 
+//Places score on-screen
 function drawScore(fSize,x,y) {
     LF1.ctx.font = `${fSize}px ArcadeClassic`;
     LF1.ctx.fillStyle = "#000000";
     LF1.ctx.fillText("Score: "+LF1.state.score, x, y);
 }
 
+//Places time countdown on screen
 function drawTimer(fSize,x,y){
     LF1.ctx.font = `${fSize}px ArcadeClassic`;
     LF1.ctx.fillStyle = "#000000";
     LF1.ctx.fillText("Time: "+LF1.state.time, x, y); 
 }
 
+//Callback function for turnSignal and incCPU
 function drawSignal(text,fSize,x,y,color){
     LF1.ctx.font = `${fSize}px ArcadeClassic`;
     LF1.ctx.fillStyle = color;
     LF1.ctx.fillText(text, x, y); 
 }
 
+//Places Billboard on-screen at multiple sizes
 function drawBillLeft(image, x, y, width, height,) {
     x += LF1.state.car.spaceOnRight;
-    // var xpos = (LF1.state.car.spaceOnRight) + LF1.state.speed *2;
-    // var ypos = (LF1.settings.skySize - 20) + LF1.state.speed ;
     bb1.src = "./img/bb1.png";
     LF1.ctx.drawImage(image, x, y, width, height);
 }
 
+//Places Player1 car on-screen
 function player1() {
     var carWidth = 90;
     var carHeight = 40;
@@ -182,6 +195,7 @@ function player1() {
     }
 }
 
+//Callback for incCPU
 function drawCPU(image, y, width, height) {
     x = LF1.state.car.spaceOnRight + 200;
     y -= LF1.state.frames * 2.1;
@@ -189,30 +203,29 @@ function drawCPU(image, y, width, height) {
     LF1.ctx.drawImage(image, x, y, width, height);
 }
 
+//Gameloop!!
 function gameLoop(){
-    // calcMovement();
-    
-    // if(LF1.state.speed > 0) {
-      // Moves the background left or right depending on keypress
-       LF1.state.bgpos += (LF1.state.currentCurve * 0.04) * (LF1.state.speed * 0.2);
-       LF1.state.bgpos = LF1.state.bgpos % LF1.canvas.width;
-       //Puts image data on screen for background
-       LF1.ctx.putImageData(LF1.storage.bg, LF1.state.bgpos, 5);
-     //Ternary statement - , move background left. or move it right
-       LF1.ctx.putImageData(LF1.storage.bg, LF1.state.bgpos > 0 ? LF1.state.bgpos - LF1.canvas.width : LF1.state.bgpos + LF1.canvas.width, 5);
-     // }
-     
-     //state.offset moves dark green background and white lane dividers. This statement determines speed at which things alternate and give illusion of movement
-     LF1.state.offset += LF1.state.speed * 0.05;
-     //this IF compares current offset to ground.min value
-     if(LF1.state.offset > LF1.settings.ground.min) {
-       //Determines ground offset speed
-       LF1.state.offset = LF1.settings.ground.min - LF1.state.offset;
-       
-       LF1.state.startDark = !LF1.state.startDark;
-     }
 
-     //Game state logic starts here
+    // Moves the background left or right depending on keypress. Clay note: Having problems with performance.
+    LF1.state.bgpos += (LF1.state.currentCurve * 0.04) * (LF1.state.speed * 0.2);
+    LF1.state.bgpos = LF1.state.bgpos % LF1.canvas.width;
+
+    //Puts image data on screen for background
+    LF1.ctx.putImageData(LF1.storage.bg, LF1.state.bgpos, 5);
+
+    //Ternary statement - , move background left. or move it right
+    LF1.ctx.putImageData(LF1.storage.bg, LF1.state.bgpos > 0 ? LF1.state.bgpos - LF1.canvas.width : LF1.state.bgpos + LF1.canvas.width, 5);
+    //state.offset moves dark green background and white lane dividers. This statement determines speed at which things alternate and give illusion of movement
+    LF1.state.offset += LF1.state.speed * 0.05;
+    //this IF compares current offset to ground.min value
+    if(LF1.state.offset > LF1.settings.ground.min) {
+        //Determines ground offset speed
+        LF1.state.offset = LF1.settings.ground.min - LF1.state.offset;
+        LF1.state.startDark = !LF1.state.startDark;
+    }
+
+    /* ------------------------- Game state logic starts here ------------------------------- */
+
     if (!LF1.state.keypress.space && !LF1.state.gameOver && LF1.state.input){
         LF1.ctx.drawImage(titleBox, 0, 0, 450, 450);
         titleBox.src = "./img/title-screen.png";
@@ -382,6 +395,30 @@ function gameLoop(){
      requestAnimationFrame(gameLoop);
 }
 
+/* ------------------------------- Game state logic ends ------------------------------------ */
+
+/* ------------------------------- Road definition logic -------------------------------- */
+
+function drawStraightL() {
+    LF1.ctx.beginPath();
+    LF1.ctx.moveTo(0, LF1.settings.skySize);
+    LF1.ctx.lineTo(0, LF1.canvas.height);
+    LF1.ctx.quadraticCurveTo(- track[0].cpx - LF1.state.car.spaceOnLeft, track[0].cpy, track[0].x - LF1.state.car.spaceOnLeft, LF1.settings.skySize)
+    LF1.ctx.closePath();
+    LF1.ctx.fillStyle = "#1E8449";
+    LF1.ctx.fill();
+}
+
+function drawStraightR() {
+    LF1.ctx.beginPath();
+    LF1.ctx.moveTo(LF1.canvas.width, LF1.settings.skySize);
+    LF1.ctx.lineTo(LF1.canvas.width, LF1.canvas.height);
+    LF1.ctx.quadraticCurveTo((LF1.canvas.width + track[0].cpx) + LF1.state.car.spaceOnRight, track[0].cpy, (track[0].x + 30) + LF1.state.car.spaceOnRight, LF1.settings.skySize)
+    LF1.ctx.closePath();
+    LF1.ctx.fillStyle = "#1E8449";
+    LF1.ctx.fill();
+}
+
 function rightTurn () {
     for(i = 0; i < 3; i++) {
         temp++;
@@ -400,52 +437,56 @@ function turnReset () {
     }
 }
 
+/* ------------------------------- Road definition logic end -------------------------------- */
+
+/* ------------------------------- Player 1 movement and Pseudo3d stepping -------------------------------- */
+
 function calcMovement() {
     var move = LF1.state.speed * 0.01
-    var newCurve = 0;
+    // var newCurve = 0;
+    
+    //Player 1 start game
     if(LF1.state.keypress.space){
         LF1.state.gameStart = true;
     }
 
+    // Player 1 Key press up
     if(LF1.state.keypress.up) {
       LF1.state.speed += LF1.state.car.acc - (LF1.state.speed * 0.015);
     } else if (LF1.state.speed > 0) {
       LF1.state.speed -= LF1.state.car.friction;
     }
     
+    //Create brake effect for player1
     if(LF1.state.keypress.down && LF1.state.speed > 0) {
       LF1.state.speed -= 1;
     }
     
-    // Left and right
+    // Left, right movement illusion for Player 1
     LF1.state.xpos -= (LF1.state.currentCurve * LF1.state.speed) * 0.005;
     
+    //Player 1 left and right
     if(LF1.state.speed) {
       if(LF1.state.keypress.left) {
           LF1.state.car.spaceOnLeft-=4;
           LF1.state.car.spaceOnRight+=4;
-        // LF1.state.xpos += (Math.abs(LF1.state.turn) + 7 + (LF1.state.speed > LF1.state.car.maxSpeed / 4 ? (LF1.state.car.maxSpeed - (LF1.state.speed / 2)) : LF1.state.speed)) * 0.2;
-        // LF1.state.turn -= 1;
       }
     
       if(LF1.state.keypress.right) {
           LF1.state.car.spaceOnLeft+=4;
           LF1.state.car.spaceOnRight-=4;
-        // LF1.state.xpos -= (Math.abs(LF1.state.turn) + 7 + (LF1.state.speed > LF1.state.car.maxSpeed / 4 ? (LF1.state.car.maxSpeed - (LF1.state.speed / 2)) : LF1.state.speed)) * 0.2;
-        // LF1.state.turn += 1;
       }
       
-      if(LF1.state.turn !== 0 && !LF1.state.keypress.left && !LF1.state.keypress.right) {
-        LF1.state.turn += LF1.state.turn > 0 ? -0.25 : 0.25;
-      }
     }
     
-    LF1.state.turn = clamp(LF1.state.turn, -5, 5);
-    LF1.state.speed = clamp(LF1.state.speed, 0, LF1.state.car.maxSpeed);
+    // Disabled clamp code
+    // LF1.state.turn = clamp(LF1.state.turn, -5, 5);
+    // LF1.state.speed = clamp(LF1.state.speed, 0, LF1.state.car.maxSpeed);
+
+    // Define section
+    // LF1.state.section -= LF1.state.speed;
     
-    // section
-    LF1.state.section -= LF1.state.speed;
-    
+    //Logic to smooth out stepping animation
     if(Math.abs(LF1.state.xpos) > 550) {
       LF1.state.speed *= 0.96;
     }
@@ -480,32 +521,6 @@ function randomRange(min, max) {
     return min + Math.random() * (max - min);
 }
 
-function drawStraightL() {
-    LF1.ctx.beginPath();
-    LF1.ctx.moveTo(0, LF1.settings.skySize);
-    LF1.ctx.lineTo(0, LF1.canvas.height);
-    LF1.ctx.quadraticCurveTo(- track[0].cpx - LF1.state.car.spaceOnLeft, track[0].cpy, track[0].x - LF1.state.car.spaceOnLeft, LF1.settings.skySize)
-    LF1.ctx.closePath();
-    LF1.ctx.fillStyle = "#1E8449";
-    LF1.ctx.fill();
-    // LF1.ctx.moveTo(0, LF1.settings.skySize);
-    // LF1.ctx.lineTo(0, LF1.canvas.length);
-    // LF1.ctx.lineTo(200, LF1.canvas.length);
-}
-
-function drawStraightR() {
-    LF1.ctx.beginPath();
-    LF1.ctx.moveTo(LF1.canvas.width, LF1.settings.skySize);
-    LF1.ctx.lineTo(LF1.canvas.width, LF1.canvas.height);
-    LF1.ctx.quadraticCurveTo((LF1.canvas.width + track[0].cpx) + LF1.state.car.spaceOnRight, track[0].cpy, (track[0].x + 30) + LF1.state.car.spaceOnRight, LF1.settings.skySize)
-    LF1.ctx.closePath();
-    LF1.ctx.fillStyle = "#1E8449";
-    LF1.ctx.fill();
-    // LF1.ctx.moveTo(0, LF1.settings.skySize);
-    // LF1.ctx.lineTo(0, LF1.canvas.length);
-    // LF1.ctx.lineTo(200, LF1.canvas.length);
-}
-
 function drawPseudo(ctx, offset, lightColor, darkColor, width) {
     var pos = (LF1.settings.skySize - LF1.settings.ground.min) + offset;
     var stepSize = 1;
@@ -535,6 +550,8 @@ function drawPseudo(ctx, offset, lightColor, darkColor, width) {
       drawDark = !drawDark;
     }
 }
+
+/* ---------------------- Functions that relate to player 1 control ------------------------- */
 
 function keyUp(e) {
     move(e, false);
@@ -571,10 +588,5 @@ function move(e, isKeyDown) {
     }
 }
 
-// function randomMove() {
-//     setInterval(function(){
-//         getRandomInt(2);
-//     },2800)
-// }
 
 
